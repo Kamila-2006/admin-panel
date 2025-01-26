@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if product %}Edit Product - E-commerce Admin Panel{% else %}Add Product - E-commerce Admin Panel{% endif %}{% endblock %}
+
+{% block content %}
+    <header class="flex justify-between items-center mb-8">
+        {% if product %}
+            <h2 class="text-3xl font-bold text-gray-800">Edit Product</h2>
+        {% else %}
+            <h2 class="text-3xl font-bold text-gray-800">Add Product</h2>
+        {% endif %}
+        <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Product Form -->
+    <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+        <form action="{% url 'products:create' %}" method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.name.label }}</label>
+                {{ form.name }}
+            </div>
+            <div>
+                <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
+                {{ form.category }}
+            </div>
+            <div>
+                <label for="{{ form.price.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.price.label }}</label>
+                {{ form.price }}
+            </div>
+            <div>
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.description.label }}</label>
+                {{ form.description }}
+            </div>
+            <div>
+                <label for="form.image.id_for_label" class="block text-sm font-medium text-gray-700">{{ form.image.label }}</label>
+                {{ form.image }}
+            </div>
+            <div class="flex justify-end space-x-4">
+                <a href="{% url 'products:list' %}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-200">Cancel</a>
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">Save Product</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

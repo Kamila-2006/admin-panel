@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if category %}Edit Category - E-commerce Admin Panel{% else %}Add Category - E-commerce Admin Panel{% endif %}{% endblock %}
+
+{% block content %}
+    <header class="flex justify-between items-center mb-8">
+        {% if category %}
+            <h2 class="text-3xl font-bold text-gray-800">Edit Category</h2>
+        {% else %}
+            <h2 class="text-3xl font-bold text-gray-800">Add Category</h2>
+        {% endif %}
+        <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Category Form -->
+    <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+        <form action="{% url 'categories:create' %}" method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.name.label }}</label>
+                {{ form.name }}
+            </div>
+            <div>
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.description.label }}</label>
+                {{ form.description }}
+            </div>
+            <div>
+                <label for="{{ form.icon.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.icon.label }}</label>
+                {{ form.icon }}
+            </div>
+            <div class="flex justify-end space-x-4">
+                <a href="list.html" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-200">Cancel</a>
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">Save Category</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
