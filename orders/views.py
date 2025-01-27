@@ -19,7 +19,10 @@ def edit_order(request, pk):
     if request.method == 'POST':
         order_form = OrderForm(request.POST)
         customer_form = CustomerForm(request.POST)
-        order_item_forms = [OrderItemForm(request.POST, prefix=str(i)) for i in range(len(order_items))]
+
+        order_item_forms = [
+            OrderItemForm(request.POST, prefix=str(i)) for i in range(len(request.POST) // len(order_items))
+        ]
 
         if order_form.is_valid() and customer_form.is_valid() and all([form.is_valid() for form in order_item_forms]):
             order.status = order_form.cleaned_data['status']
@@ -32,13 +35,28 @@ def edit_order(request, pk):
             customer.address = customer_form.cleaned_data['address']
             customer.save()
 
-            for i, form in enumerate(order_item_forms):
-                item = order_items[i]
-                if form.is_valid():
-                    item.product = form.cleaned_data['product']
-                    item.quantity = form.cleaned_data['quantity']
-                    item.price = form.cleaned_data['price']
+            existing_item_ids = []
+
+            for form in order_item_forms:
+                cleaned_data = form.cleaned_data
+
+                if cleaned_data.get('id'):
+                    item = OrderItem.objects.get(id=cleaned_data['id'])
+                    item.quantity = cleaned_data['quantity']
+                    item.price = cleaned_data['price']
                     item.save()
+                    existing_item_ids.append(item.id)
+                else:
+                    OrderItem.objects.create(
+                        order=order,
+                        product_id=cleaned_data['product_id'],
+                        quantity=cleaned_data['quantity'],
+                        price=cleaned_data['price']
+                    )
+
+            for item in order.items.all():
+                if item.id not in existing_item_ids:
+                    item.delete()
 
             return redirect('orders:list')
     else:
@@ -55,6 +73,8 @@ def edit_order(request, pk):
         })
         order_item_forms = [
             OrderItemForm(initial={
+                'id': item.id,
+                'product_id': item.product.id,
                 'product_name': item.product.name,
                 'quantity': item.quantity,
                 'price': item.price,
@@ -67,7 +87,6 @@ def edit_order(request, pk):
         'customer_form': customer_form,
         'order_item_forms': order_item_forms,
     }
-
     return render(request, 'orders/form.html', ctx)
 
 def order_detail(request, pk):

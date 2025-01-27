@@ -43,8 +43,17 @@ class CustomerForm(forms.Form):
         return name
 
 class OrderItemForm(forms.Form):
-    product_id = forms.IntegerField(widget=forms.HiddenInput)
-    product_name = forms.CharField(disabled=True, widget=forms.TextInput(
+    id = forms.IntegerField(widget=forms.HiddenInput(
+        attrs={
+            'readonly':'readonly'
+        }
+    ))
+    product_id = forms.IntegerField(widget=forms.HiddenInput(
+        attrs={
+            'readonly': 'readonly'
+        }
+    ))
+    product_name = forms.CharField(widget=forms.TextInput(
         attrs={
             'class': 'w-full border-gray-300 rounded-md shadow-sm'
         }
@@ -56,8 +65,7 @@ class OrderItemForm(forms.Form):
     price = forms.DecimalField(widget=forms.NumberInput(
         attrs={
             'class': 'w-full border-gray-300 rounded-md shadow-sm'
-        }
-    ))
+        }))
     total = forms.DecimalField(widget=forms.NumberInput(
         attrs={
             'readonly': 'readonly'

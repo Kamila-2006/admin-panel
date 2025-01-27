@@ -13,8 +13,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    extra = 1  # Количество пустых строк для добавления новых записей
-
+    extra = 1
 
 class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ['total']
@@ -30,15 +29,23 @@ class CustomerAdmin(admin.ModelAdmin):
     list_filter = ('name',)
 
 
-# Регистрируем модели в админке
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Customer, CustomerAdmin)
 
 
-# Сигнал для пересчета стоимости после сохранения объекта Order
 @receiver(post_save, sender=Order)
 def update_order_total(sender, instance, created, **kwargs):
     if created:
-        instance.total = instance.calculate_total()  # Пересчитываем total
+        instance.total = instance.calculate_total()
         instance.save()
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'order', 'product', 'quantity', 'price', 'total_price')
+    search_fields = ('order__id', 'product__name')
+    list_filter = ('order__date',)
+
+    def total_price(self, obj):
+        return obj.total_price()
+    total_price.short_description = 'Total Price'

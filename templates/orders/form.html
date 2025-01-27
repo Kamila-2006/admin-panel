@@ -72,14 +72,12 @@
                         </td>
                         <td class="p-2">${{ form.initial.total }}</td>
                         <td class="p-2">
-                            {% if form.instance.id %}
-                                <form method="post" action="{% url 'orders:delete_item' form.instance.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-red-600 hover:text-red-800">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </form>
-                            {% endif %}
+                            <form method="post" >
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
