@@ -1,7 +1,5 @@
 from django.db import models
 from products.base_models import BaseModel
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
 
 
 class Order(models.Model):
@@ -23,8 +21,10 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             super().save(*args, **kwargs)
-        self.total = self.calculate_total()
-        super().save(*args, **kwargs)
+            self.total = self.calculate_total()
+            super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -33,7 +33,7 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def total_price(self):
-        return self.quantity * self.product.price
+        return self.quantity * self.price
 
 class Customer(BaseModel):
     email = models.EmailField(unique=True)
@@ -42,10 +42,3 @@ class Customer(BaseModel):
 
     def __str__(self):
         return self.name
-
-@receiver(post_save, sender=OrderItem)
-@receiver(post_delete, sender=OrderItem)
-def update_order_total(sender, instance, **kwargs):
-    order = instance.order
-    order.total = order.calculate_total()
-    order.save()
