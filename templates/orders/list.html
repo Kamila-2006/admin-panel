@@ -13,22 +13,24 @@
     <!-- Order List Controls -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
         <div class="flex flex-wrap gap-4 items-center justify-between">
-            <div class="flex flex-wrap gap-4 items-center">
-                <input type="text" placeholder="Search orders" class="border p-2 rounded">
-                <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
-                    <i class="fas fa-search mr-2"></i>Search
-                </button>
-            </div>
-            <div>
-                <select class="border p-2 rounded">
-                    <option value="">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
-            </div>
+            <form method="get">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <input type="text" name="query" value="{{ request.GET.query }}" placeholder="Search orders" class="border p-2 rounded">
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+                <div>
+                    <select name="status" class="border p-2 rounded">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </form>
         </div>
     </div>
 

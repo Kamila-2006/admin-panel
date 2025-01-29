@@ -14,23 +14,25 @@
     <div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
         <div class="flex flex-wrap gap-4 items-center justify-between">
             <div class="flex flex-wrap gap-4 items-center">
-                <input type="text" placeholder="Search products" class="border p-2 rounded">
-                <select class="border p-2 rounded">
-                    <option>All Categories</option>
-                    {% for category in categories %}
-                        <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
-                <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
-                    <i class="fas fa-search mr-2"></i>Search
-                </button>
+                <form method="get">
+                    <input type="text" name="query" value="{{ request.GET.query }}" placeholder="Search products" class="border p-2 rounded">
+                    <select name="category" class="border p-2 rounded">
+                        <option value="" >All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="sort" class="border p-2 rounded">
+                        <option value="" >Sort by: Name</option>
+                        <option value="low_to_high">Sort by: Price (Low to High)</option>
+                        <option value="high_to_low">Sort by: Price (High to Low)</option>
+                    </select>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </form>
             </div>
             <div class="flex gap-4 items-center">
-                <select class="border p-2 rounded">
-                    <option>Sort by: Name</option>
-                    <option value="low_to_high">Sort by: Price (Low to High)</option>
-                    <option value="high_to_low">Sort by: Price (High to Low)</option>
-                </select>
                 <a href="{% url 'products:create' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors duration-200">
                     <i class="fas fa-plus mr-2"></i>Add Product
                 </a>

@@ -5,8 +5,11 @@ from .models import Order
 def order_list(request):
     orders = Order.objects.all()
     search = request.GET.get('query')
+    status = request.GET.get('status')
     if search:
         orders = orders.filter(customer__name__icontains=search)
+    if status:
+        orders = orders.filter(status=status)
     ctx = {'orders': orders}
     return render(request, 'orders/list.html', ctx)
 
